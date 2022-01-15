@@ -46,6 +46,6 @@ public:
             }
             mp[arr[u]].clear();
         }
-        return visited[n-1]; 
+        return visited[n-1]-1; 
     }
 };
