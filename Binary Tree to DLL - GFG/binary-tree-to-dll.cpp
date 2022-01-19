@@ -107,22 +107,36 @@ struct Node
 class Solution
 {
     public: 
-    void convert(Node *root, Node **head){
-        if(root == NULL)
-            return;
-        convert(root->right, head);
-        root->right = *head;
-        if (*head != NULL)
-            (*head)->left = root;
-        *head = root;
-        convert(root->left, head);
-    }
+    
     //Function to convert binary tree to doubly linked list and return it.
     Node * bToDLL(Node *root)
     {
         // your code here
-        Node *head = NULL;
-        convert(root, &head);
+        stack<pair<Node*, int>> s;
+        s.push({root, 0});
+        vector<int> res;
+        bool flag = true;
+        Node* head = NULL;
+        Node* prev = NULL;
+        while(!s.empty()) {
+            auto x = s.top();
+            Node* t = x.first;
+            int state = x.second;
+            s.pop();
+            if(state == 3 or t == NULL) continue;
+            s.push({t, state+1});
+            if(state == 0) s.push({t->left, 0});
+            else if(state == 1) {
+                if(prev) prev->right = t;
+                t->left = prev;
+                prev = t;
+                if(flag) {
+                    head = t;
+                    flag = false;
+                }
+            }
+            else if(state == 2) s.push({t->right, 0});
+        }
         return head;
     }
 };
