@@ -12,7 +12,7 @@
 class Solution {
 public:
     vector<TreeNode*> ans;
-    void solve(TreeNode* &root, set<int> mp){
+    void solve(TreeNode* &root, unordered_map<int,int> mp){
         if(!root){
             return;
         }
@@ -30,9 +30,9 @@ public:
         }
     }
     vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_del) {
-        set<int> mp;
+        unordered_map<int, int> mp;
         for(int i=0; i<to_del.size(); i++){
-            mp.insert(to_del[i]);
+            mp[to_del[i]]++;
         }
         solve(root, mp);
         if(root){
