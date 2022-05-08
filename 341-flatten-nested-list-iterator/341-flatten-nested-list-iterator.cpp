@@ -17,39 +17,41 @@
  */
 
 class NestedIterator {
+private:
+    stack<NestedInteger> nodes;
+    
 public:
-    vector<int> a;
-    int ptr = 0;
-    void getIntegers(vector<NestedInteger>& nestedList, int pos) {
-        int n = nestedList.size();
-        if(pos == n) {
-            return;
-        }
-        if(nestedList[pos].isInteger()) {
-            int val = nestedList[pos].getInteger();
-            a.push_back(val);
-            getIntegers(nestedList, pos + 1);
-            return;
-        }
-        getIntegers(nestedList[pos].getList(), 0);
-        getIntegers(nestedList, pos + 1);
-    }
     NestedIterator(vector<NestedInteger> &nestedList) {
-        getIntegers(nestedList, 0);
-    }
-    
-    int next() {
-        return a[ptr++];
-    }
-    
-    bool hasNext() {
-        if(ptr == (int) a.size()) {
-            return false;
+        int size = nestedList.size();
+        for(int i = size - 1; i >= 0; --i) {
+            nodes.push(nestedList[i]);
         }
-        return true;
+    }
+
+int next() {
+    int result = nodes.top().getInteger();
+    nodes.pop();
+    return result;
+}
+
+bool hasNext() {
+    while(!nodes.empty()) {
+        NestedInteger curr = nodes.top();
+        if(curr.isInteger()) {
+            return true;
+        }
+        
+        nodes.pop();
+        vector<NestedInteger>& adjs = curr.getList();
+        int size = adjs.size();
+        for(int i = size - 1; i >= 0; --i) {
+            nodes.push(adjs[i]);
+        }
+    }
+    
+    return false;
     }
 };
-
 
 /**
  * Your NestedIterator object will be instantiated and called as such:
