@@ -6,33 +6,36 @@ using namespace std;
  // } Driver Code Ends
 class Solution{
     public:
-    string findSubString(string str)
+    int findSubString(string str)
     {
         // Your code goes here   
-         int n = str.length();
-       unordered_map<char,int> u;
-       for(int i=0;i<n;i++){
-           u[str[i]]=0;
+        unordered_map<char,int>m;
+       for(int i=0;i<str.size();i++){
+           m[str[i]]++;
        }
-       int i=0,j=0,ans=INT_MAX,count=0;
-       string res;
-       while(j<n){
-           if(u[str[j]]==0) count++;
-           u[str[j]]+=1;
-           
-           if(count==u.size()){
-               while(i<n && u[str[i]]>1){
-                   u[str[i]]--;
-                   i++;
-               }
-               if(ans > (j-i+1)){
-                   ans = j-i+1;
-                   res = str.substr(i,j-i+1);
-               }
-           }
-           j++;
+       unordered_map<char,int>mp;
+       int k=m.size();
+       int mx=INT_MAX;
+       int i=0;
+       int j=0;
+       while(j<str.size()){
+           mp[str[j]]++;
+           if(mp.size()<k)
+             j++;
+             else if(mp.size()==k){
+                 mx=min(mx,j-i+1);
+                 while(mp.size()==k){
+                     mx=min(mx,j-i+1);
+                     mp[str[i]]--;
+                     if(mp[str[i]]==0)
+                     mp.erase(str[i]);
+                     i++;
+                 }
+                 j++;
+             }
+             
        }
-       return res;
+       return mx;
     }
 };
 
@@ -46,7 +49,7 @@ int main() {
         string str;
         cin >> str;
         Solution ob;
-        cout << ob.findSubString(str).size() << endl;
+        cout << ob.findSubString(str) << endl;
     }
     return 0;
 }  // } Driver Code Ends
